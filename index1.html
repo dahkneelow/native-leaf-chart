@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load Charts and the corechart package. Change '47' to 'current' for latest version
+      google.charts.load('47', {'packages':['corechart']});
+
+      // Draw the pie chart for Weekly Packs when Charts is loaded.
+      google.charts.setOnLoadCallback(drawWPChart);
+
+      // Draw the pie chart for the Pack Bank when Charts is loaded.
+      google.charts.setOnLoadCallback(drawPBChart);
+
+      // Draw the pie chart for the B2B when Charts is loaded.
+      google.charts.setOnLoadCallback(drawBBChart);
+
+      // Draw the pie chart for the B2C when Charts is loaded.
+      google.charts.setOnLoadCallback(drawBCChart)
+      google.charts.setOnLoadCallback(WPavg)
+      google.charts.setOnLoadCallback(PBsum)
+      google.charts.setOnLoadCallback(BBsum)
+      google.charts.setOnLoadCallback(BCsum)
+
+      // Callback that draws the pie chart for Weekly Packs.
+    function drawWPChart() {
+
+      var queryString = encodeURIComponent('SELECT A, B');
+      var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=1548775037&headers=1&tq=' + queryString);
+      query.send(handleQueryResponse);
+    }
+    
+
+    function handleQueryResponse(response) {
+      
+      var data = response.getDataTable();
+      var chart = new google.visualization.LineChart(document.getElementById('WP_chart_div'));
+      var options = {title:'Weekly Packs',
+                        hAxis: {
+                        title: 'Week',
+                        minValue: 1
+                       },
+                        vAxis: {
+                        title: 'Packs Receieved'
+                     },
+                       width:500,
+                       height:400};
+      chart.draw(data, options);
+    }
+
+    function WPavg() {
+    
+      var queryString = encodeURIComponent('SELECT B');
+      var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=1548775037&headers=1&tq=' + queryString);
+      query.send(handleAvgResponse)
+    }
+    
+    
+      function handleAvgResponse(response) {
+      
+      var avgData = response.getDataTable();
+      var jsonData = avgData.toJSON();
+
+      jsonData = JSON.parse(jsonData);
+      var dataRows= jsonData.rows;
+      var sum = 0
+      for(var i=0; i<dataRows.length; i++){
+        sum += dataRows[i].c['0'].v;
+
+
+
+      }
+      var avg = sum/dataRows.length;
+      document.getElementById('WProws').innerHTML = "Weekly Packs Average: " + avg;
+      console.log(avg);
+        
+    }
+
+
+
+      // Callback that draws the pie chart for Pack Bank.
+      function drawPBChart() {
+       var queryString1 = encodeURIComponent('SELECT A, B');
+       var query2 = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=0&headers=1&tq=' + queryString1);
+       query2.send(handleQueryResponse2);
+    }
+      function handleQueryResponse2(response2) {
+        var data2 = response2.getDataTable();
+        var chart2 = new google.visualization.LineChart(document.getElementById('PB_chart_div'));
+        var options2 = {title:'Pack Bank',
+                        hAxis: {
+                        title: 'Week',
+                        minValue: 1
+                       },
+                        vAxis: {
+                        title: 'Number of Packs Added'
+                     },
+                       width:500,
+                       height:400};
+        chart2.draw(data2, options2);
+    }
+      function PBsum() {
+    
+      var queryString = encodeURIComponent('SELECT B');
+      var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=0&headers=1&tq=' + queryString);
+      query.send(handlePBResponse)
+    }
+    
+    
+      function handlePBResponse(response) {
+      
+      var sumData = response.getDataTable();
+      var jsonData = sumData.toJSON();
+
+      jsonData = JSON.parse(jsonData);
+      var dataRows= jsonData.rows;
+      var sum = 0
+      for(var i=0; i<dataRows.length; i++){
+        sum += dataRows[i].c['0'].v;
+
+
+
+      }
+      
+      document.getElementById('PBrows').innerHTML = "Total Packs in Bank: " + sum;
+      
+        
+    }
+
+
+  
+            // Callback that draws the pie chart for B2B.
+      function drawBBChart() {
+
+       var queryString2 = encodeURIComponent('SELECT A, B');
+       var query3 = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=498010151&headers=1&tq=' + queryString2);
+       query3.send(handleQueryResponse3);
+    }
+      function handleQueryResponse3(response3) {
+        var data3 = response3.getDataTable();
+        var chart3 = new google.visualization.LineChart(document.getElementById('BB_chart_div'));
+        var options3 = {title:'B2B',
+                        hAxis: {
+                        title: 'Week',
+                        minValue: 1
+                       },
+                        vAxis: {
+                        title: 'Weekly Profit'
+                     },
+                       width:500,
+                       height:400};
+        chart3.draw(data3, options3);
+    }
+     function BBsum() {
+    
+      var queryString = encodeURIComponent('SELECT B');
+      var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=498010151&headers=1&tq=' + queryString);
+      query.send(handleBBResponse)
+    }
+    
+    
+      function handleBBResponse(response) {
+      
+      var sumData = response.getDataTable();
+      var jsonData = sumData.toJSON();
+
+      jsonData = JSON.parse(jsonData);
+      var dataRows= jsonData.rows;
+      var sum = 0
+      for(var i=0; i<dataRows.length; i++){
+        sum += dataRows[i].c['0'].v;
+
+
+
+      }
+      
+      document.getElementById('BBrows').innerHTML = "Total B2B Revenue: " + sum;
+      
+        
+    }
+
+            // Callback that draws the pie chart for B2C.
+      function drawBCChart() {
+
+       var queryString3 = encodeURIComponent('SELECT A, B');
+       var query4 = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=2131027871&headers=1&tq=' + queryString3);
+       query4.send(handleQueryResponse4);
+    }
+      function handleQueryResponse4(response4) {
+        var data4 = response4.getDataTable();
+        var chart4 = new google.visualization.LineChart(document.getElementById('BC_chart_div'));
+        var options4 = {title:'B2C',
+                        hAxis: {
+                        title: 'Week',
+                        minValue: 1
+                       },
+                        vAxis: {
+                        title: 'Weekly Profit'
+                     },
+                       width:500,
+                       height:400};
+        chart4.draw(data4, options4);
+    }
+     function BCsum() {
+    
+      var queryString = encodeURIComponent('SELECT B');
+      var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1975ekORVQV6xcxP-t4x1-aWNTZ9IkF7Xt8nX1dub0QE/gviz/tq?gid=2131027871&headers=1&tq=' + queryString);
+      query.send(handleBCResponse)
+    }
+    
+    
+      function handleBCResponse(response) {
+    
+      var sumData = response.getDataTable();
+      var jsonData = sumData.toJSON();
+
+      jsonData = JSON.parse(jsonData);
+      var dataRows= jsonData.rows;
+      var sum = 0
+      for(var i=0; i<dataRows.length; i++){
+        sum += dataRows[i].c['0'].v;
+
+
+
+      }
+      
+      document.getElementById('BCrows').innerHTML = "Total B2C Revenue: " + sum;
+      
+        
+    }
+
+      
+    </script>
+  </head>
+  <body>
+
+    <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Progress Bar</h1>
+                    </div>
+
+
+<div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Charts</h6>                                       
+                                    </div>
+                                </div>
+<table class="table">
+    <tr>
+<div class="card-body">
+                                    <div class="row">
+                        <div class='col' id="WP_chart_div" style="border: 2px solid #ccc"></div>
+                        <div id="WProws"></div>
+                        <div class='col' id="PB_chart_div" style="border: 2px solid #ccc"></div>
+                        <div id="PBrows"></div>
+                        <div class='col' id="BB_chart_div" style="border: 2px solid #ccc"></div>
+                        <div id="BBrows"></div>
+                        <div class='col' id="BC_chart_div" style="border: 2px solid #ccc"></div>
+                        <div id="BCrows"></div>         
+                                    
+                                    
+                                    
+                                    </div>
+
+</div>
+</tr>
+</table>
+</div>
+
+
+ 
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
